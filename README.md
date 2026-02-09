@@ -20,3 +20,4 @@ The simulation runs entirely in **Docker** containers:
 ## How to Run
 1. `docker-compose build`
 2. `docker-compose up`
+3. `docker-compose down`
