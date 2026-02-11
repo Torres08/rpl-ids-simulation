@@ -1,17 +1,50 @@
 version: '3.8'
 
 services:
-  normal_node:
-    build: .                # uses the Dockerfile in the root
+## Each service represents a container in the Docker environment.
+## Normal nodes simulate regular IoT devices.
+  node_1:
+    build: .               
     container_name: sensor-1
-    command: python normal_node/main.py  # specific script for this node
-    cap_add: ['NET_ADMIN']  # permission to spoof packets :D
+    command: python normal_node/main.py 
+    cap_add: ['NET_ADMIN']  
     networks:
       iot_net:
         ipv4_address: 172.20.0.11
     environment:
-      - PYTHONUNBUFFERED=1  # shows logs immediately
+      - PYTHONUNBUFFERED=1  
+  node_2:
+    build: .               
+    container_name: sensor-2
+    command: python normal_node/main.py 
+    cap_add: ['NET_ADMIN']  
+    networks:
+      iot_net:
+        ipv4_address: 172.20.0.12
+    environment:
+      - PYTHONUNBUFFERED=1  
+  node_3:
+    build: .               
+    container_name: sensor-3
+    command: python normal_node/main.py 
+    cap_add: ['NET_ADMIN']  
+    networks:
+      iot_net:
+        ipv4_address: 172.20.0.13
+    environment:
+      - PYTHONUNBUFFERED=1  
+  node_4:
+    build: .               
+    container_name: sensor-4
+    command: python normal_node/main.py 
+    cap_add: ['NET_ADMIN']  
+    networks:
+      iot_net:
+        ipv4_address: 172.20.0.14
+    environment:
+      - PYTHONUNBUFFERED=1  
 
+## Attacker simulates a malicious actor.
   attacker:
     build: .
     container_name: bad-actor
@@ -23,12 +56,12 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
 
+# The IDS monitors network traffic for anomalies.
   ids:
     build: .
     container_name: root-ids
-    # we will set the command later when the defense is ready. For now, just keep it running.
-    # change it when implementing part B
-    command: tail -f /dev/null 
+    command: python ids/ids.py
+    privileged: true
     cap_add: ['NET_ADMIN']
     networks:
       iot_net:
