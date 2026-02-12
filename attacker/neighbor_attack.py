@@ -1,5 +1,6 @@
 import socket
 import time
+import random
 
 TARGET_IP = "172.20.0.100"
 PORT = 9999
@@ -11,4 +12,6 @@ print("Neighbor attack started (fake best parent)")
 while True:
     payload = b"DIO|rank=0|parent=attacker"
     sock.sendto(payload, (TARGET_IP, PORT))
-    
+    time.sleep(random.uniform(4, 8))  # normal timing
+
+
