@@ -12,7 +12,8 @@ services:
       iot_net:
         ipv4_address: 172.20.0.11
     environment:
-      - PYTHONUNBUFFERED=1  
+      - PYTHONUNBUFFERED=1
+      - BASE_RANK=3
   node_2:
     build: .               
     container_name: sensor-2
@@ -22,7 +23,8 @@ services:
       iot_net:
         ipv4_address: 172.20.0.12
     environment:
-      - PYTHONUNBUFFERED=1  
+      - PYTHONUNBUFFERED=1 
+      - BASE_RANK=4
   node_3:
     build: .               
     container_name: sensor-3
@@ -33,6 +35,7 @@ services:
         ipv4_address: 172.20.0.13
     environment:
       - PYTHONUNBUFFERED=1  
+      - BASE_RANK=5
   node_4:
     build: .               
     container_name: sensor-4
@@ -43,12 +46,13 @@ services:
         ipv4_address: 172.20.0.14
     environment:
       - PYTHONUNBUFFERED=1  
+      - BASE_RANK=6
 
 ## Attacker simulates a malicious actor.
-  attacker:
+  flood_attacker:
     build: .
-    container_name: bad-actor
-    command: python attacker/attack.py
+    container_name: flood-attacker
+    command: python attacker/flood_attack.py
     cap_add: ['NET_ADMIN']
     networks:
       iot_net:
@@ -56,6 +60,16 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
 
+  neighbor_attacker:
+    build: .
+    container_name: neighbor-attacker
+    command: python attacker/neighbor_attack.py
+    cap_add: ['NET_ADMIN']
+    networks:
+      iot_net:
+        ipv4_address: 172.20.0.67
+    environment:
+      - PYTHONUNBUFFERED=1
 # The IDS monitors network traffic for anomalies.
   ids:
     build: .
