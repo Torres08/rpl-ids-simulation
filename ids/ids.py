@@ -2,10 +2,19 @@ import socket
 import time
 import statistics
 from datetime import datetime
+import os
+import csv
 
 PORT = 9999
 WINDOW_TIME = 10
 TRAINING_WINDOWS = 10
+LOG_FILE = "logs/ids_alerts.csv"
+
+log = open(LOG_FILE, "a", newline="")
+writer = csv.writer(log)
+
+if os.stat(LOG_FILE).st_size == 0:
+    writer.writerow(["timestamp","window_count","threshold","alert"])
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(("0.0.0.0", PORT))
@@ -134,6 +143,11 @@ while True:
                     if r < (mu_rank - 3 * sigma_rank):
                         print(f"[{now}] 🚨 ALERT: Suspicious low rank detected ({r})")
                         break
+            
+            writer.writerow([ datetime.now().strftime("%H:%M:%S"), dis_count, thr_dis, "DIS Flood" if dis_count > thr_dis else "None"])
+            writer.writerow([ datetime.now().strftime("%H:%M:%S"), dio_count, thr_dio, "DIO Flood" if dio_count > thr_dio else "None"])
+            writer.writerow([ datetime.now().strftime("%H:%M:%S"), rank_values[-1] if rank_values else "N/A", f"{mu_rank:.2f}±{3*sigma_rank:.2f}", "Low Rank Attack" if rank_values and sigma_rank > 0 and rank_values[-1] < (mu_rank - 3 * sigma_rank) else "None"])
+            log.flush()
 
 
         # reset window

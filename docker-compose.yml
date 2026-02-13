@@ -14,6 +14,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - BASE_RANK=3
+      - NODE_ID=1
+      - MY_IP=172.20.0.11
+    volumes:
+      - ./logs:/app/logs
   node_2:
     build: .               
     container_name: sensor-2
@@ -25,6 +29,11 @@ services:
     environment:
       - PYTHONUNBUFFERED=1 
       - BASE_RANK=4
+      - NODE_ID=2
+      - MY_IP=172.20.0.12
+    volumes:
+      - ./logs:/app/logs
+      
   node_3:
     build: .               
     container_name: sensor-3
@@ -36,6 +45,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1  
       - BASE_RANK=5
+      - NODE_ID=3
+      - MY_IP=172.20.0.13
+    volumes:
+      - ./logs:/app/logs
   node_4:
     build: .               
     container_name: sensor-4
@@ -47,6 +60,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1  
       - BASE_RANK=6
+      - NODE_ID=4
+      - MY_IP=172.20.0.14
+    volumes:
+      - ./logs:/app/logs
 
 ## Attacker simulates a malicious actor.
   flood_attacker:
@@ -59,6 +76,9 @@ services:
         ipv4_address: 172.20.0.66
     environment:
       - PYTHONUNBUFFERED=1
+      - MY_IP=172.20.0.66
+    volumes:
+      - ./logs:/app/logs
 
   neighbor_attacker:
     build: .
@@ -70,6 +90,9 @@ services:
         ipv4_address: 172.20.0.67
     environment:
       - PYTHONUNBUFFERED=1
+      - MY_IP=172.20.0.67
+    volumes:
+      - ./logs:/app/logs
 # The IDS monitors network traffic for anomalies.
   ids:
     build: .
@@ -82,6 +105,8 @@ services:
         ipv4_address: 172.20.0.100
     environment:
       - PYTHONUNBUFFERED=1
+    volumes:
+      - ./logs:/app/logs
 
 networks:
   iot_net:
