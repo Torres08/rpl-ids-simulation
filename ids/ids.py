@@ -7,7 +7,7 @@ import csv
 
 PORT = 9999
 WINDOW_TIME = 10
-TRAINING_WINDOWS = 10
+TRAINING_WINDOWS = 7
 LOG_FILE = "logs/ids_alerts.csv"
 
 log = open(LOG_FILE, "a", newline="")
@@ -138,15 +138,20 @@ while True:
                 print(f"[{now}] 🚨 ALERT: Neighbor/DIO Flood detected!")
 
             # -------- Rank anomaly --------
+            rank_alert = False
+            suspicious_rank = None
+
             if rank_values and sigma_rank > 0:
                 for r in rank_values:
                     if r < (mu_rank - 3 * sigma_rank):
                         print(f"[{now}] 🚨 ALERT: Suspicious low rank detected ({r})")
+                        rank_alert = True
+                        suspicious_rank = r
                         break
             
             writer.writerow([ datetime.now().strftime("%H:%M:%S"), dis_count, thr_dis, "DIS Flood" if dis_count > thr_dis else "None"])
             writer.writerow([ datetime.now().strftime("%H:%M:%S"), dio_count, thr_dio, "DIO Flood" if dio_count > thr_dio else "None"])
-            writer.writerow([ datetime.now().strftime("%H:%M:%S"), rank_values[-1] if rank_values else "N/A", f"{mu_rank:.2f}±{3*sigma_rank:.2f}", "Low Rank Attack" if rank_values and sigma_rank > 0 and rank_values[-1] < (mu_rank - 3 * sigma_rank) else "None"])
+            writer.writerow([ datetime.now().strftime("%H:%M:%S"), suspicious_rank if rank_alert else "N/A", f"{mu_rank:.2f}±{3*sigma_rank:.2f}","Low Rank Attack" if rank_alert else "None"])
             log.flush()
 
 

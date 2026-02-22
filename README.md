@@ -5,6 +5,8 @@ This project simulates an IoT network using the RPL protocol to demonstrate **At
 
 It is based on the research paper: *"An Anomaly-Based IDS for Detecting Attacks in RPL-Based Internet of Things"*.
 
+Video demonstration [here](https://youtu.be/QOthFE-UGvw)
+
 ## Architecture
 The simulation runs entirely in **Docker** containers:
 * **Normal Nodes:** Simulate standard IoT sensor traffic (DIO/DAO messages).

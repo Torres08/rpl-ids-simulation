@@ -6,7 +6,7 @@ import os
 
 TARGET_IP = "172.20.0.100"
 PORT = 9999
-LOG_FILE = "logs/attacker.csv"
+LOG_FILE = "logs/flood_attacker.csv"
 
 os.makedirs("logs", exist_ok=True)
 log = open(LOG_FILE, "a", newline="")

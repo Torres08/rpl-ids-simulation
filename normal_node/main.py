@@ -13,11 +13,13 @@ BASE_RANK = int(os.getenv("BASE_RANK", 3))
 LOG_FILE = "logs/normal_nodes.csv"
 
 # Ensure logs directory exists and log file is initialized
-os.makedirs("logs", exist_ok=True)
+file_exists = os.path.isfile(LOG_FILE)
 log = open(LOG_FILE, "a", newline="")
 writer = csv.writer(log)
-if os.stat(LOG_FILE).st_size == 0:
+
+if not file_exists:
     writer.writerow(["timestamp","node_id","src","event","info"])
+    log.flush()
 
 # set up socket for sending DIO and DIS messages
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
